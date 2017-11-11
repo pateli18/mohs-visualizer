@@ -11,15 +11,71 @@
 </head>
 <body>
 
+	<div style="color: white; background-color: #228eae; text-align: center; font-weight: bold; padding-top: 5px; padding-bottom: 5px; margin-top: 20px;margin-bottom: 20px; margin-left: 400px; margin-right: 400px;">
+		<h1>Mohs Analysis</h1>
+	</div>
+
+	<div class="col-md-7">
+		<div id="line-chart"></div>
+		<div id="stacked-chart"></div>
+	</div>
+
+	<div class="col-md-5">
+		<div class="col-md-6">
+			<h4 class="chart-title">Select Metric:</h4>
+			<select class="form-control" id="metric-type" onchange="updatePlots()">
+				<option value="premium_mean">Procedure Cost</option>
+				<option value="count_mean">Procedure Count</option>
+			</select>
+		</div>
+		<div class="col-md-6">
+			<h4 class="chart-title">Select Procedure:</h4>
+			<select class="form-control" id="procedure-type" onchange="updatePlots()">
+				<option value="All">All Procedures</option>
+				<option value="Mohs">Mohs</option>
+				<option value="All Repair">All Repair</option>
+				<option value="Repair">Repair</option>
+				<option value="Graft">Graft</option>
+				<option value="Layer Closure">Layer Closure</option>
+				<option value="Adjacent Tissue Transfer">Adjacent Tissue Transfer</option>
+			</select>
+			<br>
+		</div>
+		<h4 class="chart-title">Methodology:</h4>
+		<div class="subtitle">
+			<p>Additional procedure cost and count are calculated by counting the total number of
+				procedures in the table above and dividing it by the number of initial Mohs procedures
+				(HCPCS Code - 17311).</p>
+			<p>Cost factors were calculated by taking the median of the relevant grouping in order
+				to remain robust to outliers.</p>
+		</div>
+		<div class="table-wrapper">
+			<table class="table table-striped header-fixed">
+				<thead>
+					<tr>
+						<th>Code</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody id="data-table-body">
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
 	<!-- Load JS libraries -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/d3.min.js"></script>
 	<script src="js/d3-tip.js"></script>
+	<script src="js/d3-legend.min.js"></script>
 
 	<!-- Choropleth and second visualization -->
 	<script src="js/main.js"></script>
 	<script src="js/line-chart.js"></script>
+	<script src="js/stacked-chart.js"></script>
+
 
 </body>
 </html>

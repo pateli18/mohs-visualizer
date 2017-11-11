@@ -1,9 +1,8 @@
 
-LinePlot = function(_parentElement, _data, _title) {
+LinePlot = function(_parentElement, _data) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = _data;
-    this.title = _title;
 
     this.initVis();
 }
@@ -12,7 +11,7 @@ LinePlot = function(_parentElement, _data, _title) {
 LinePlot.prototype.initVis = function() {
     var vis = this;
 
-    vis.margin = { top: 50, right: 200, bottom: 20, left: 30 };
+    vis.margin = { top: 50, right: 100, bottom: 100, left: 50 };
 
     vis.width = $('#' + vis.parentElement).width() - vis.margin.left - vis.margin.right,
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -25,26 +24,34 @@ LinePlot.prototype.initVis = function() {
         .append('g')
         .attr('transform', "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-    vis.xScale = d3.scaleLog()
-        .range([0, vis.width]);
+    vis.xScale = d3.scalePoint()
+        .domain([2012, 2013, 2014, 2015])
+        .rangeRound([0, vis.width])
+        .padding(.1);
 
     vis.yScale = d3.scaleLinear()
-        .range([vis.height, 0])
-        .domain([0, 100]);
+        .range([vis.height, 0]);
 
-    vis.radiusScale = d3.scaleQuantize()
-        .range([3, 6, 9, 12, 15, 18, 21]);
+    vis.colorScale = d3.scaleOrdinal()
+        .range(standardColors)
+        .domain(['Mass', 'Boston', 'Dr. Neel']);
 
-    vis.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    vis.line = d3.line()
+        .x(function(d) { return vis.xScale(d.year); } )
+        .y(function(d) { return vis.yScale(d.chosen_metric); });
 
-    vis.numFormat = d3.format(",.0f");
+    vis.area = d3.area()
+        .x(function(d) { return vis.xScale(d.year);})
+        .y0(function(d) { return vis.yScale(d.chosen_metric - d.chosen_std); })
+        .y1(function(d) { return vis.yScale(d.chosen_metric + d.chosen_std); });
 
     vis.xAxis = d3.axisBottom()
         .scale(vis.xScale)
-        .tickFormat(vis.numFormat);
+        .tickFormat(d3.format('.0f'));
 
     vis.yAxis = d3.axisLeft()
-        .scale(vis.yScale);
+        .scale(vis.yScale)
+        .tickFormat(d3.format('.0%'));
 
     vis.svg.append("g")
         .attr("class", "x-axis axis")
@@ -52,7 +59,7 @@ LinePlot.prototype.initVis = function() {
         .append('text')
         .attr('transform', "translate(" + (vis.width - 20) + ",-5)")
         .attr('class', 'axis-label')
-        .text('Population');
+        .text('Year');
 
     vis.svg.append("g")
         .attr("class", "y-axis axis")
@@ -65,138 +72,163 @@ LinePlot.prototype.initVis = function() {
         .offset([-8, 0]);
 
     vis.svg.append("g")
-        .attr("class", "legendSequential")
-        .attr("transform", "translate(" + (vis.width + 30) + ", " + (vis.height / 1.65) + ")");
+        .attr("class", "legendOrdinal")
+        .attr("transform", "translate(" + (vis.width / 2.3) + ", " + (vis.height + 50) + ")");
 
-    vis.legendRegion = d3.legendColor()
-        .shapeWidth(30)
-        .cells(6)
-        .orient("vertical")
-        .title('Region');
-
-    vis.svg.append("g")
-        .attr("class", "legendSize")
-        .attr("transform", "translate(" + (vis.width + 30) + ", " + 0 + ")");
-
-    vis.legendSize = d3.legendSize()
+    vis.legendOrdinal = d3.legendColor()
         .shape('circle')
-        .shapePadding(1)
-        .labelOffset(20)
-        .orient('vertical')
-        .labelFormat(function(d) {
-            return d3.format('.0f')(d / 1000000) + 'M';
-        });
+        .shapePadding(30)
+        .orient('horizontal')
+        .scale(vis.colorScale);
 
-    add_data_footnote('#scatter-plot');
+    vis.chartTitle = vis.svg.append("text")
+                        .attr("class", "chart-title")
+                        .attr("transform", "translate(" + (vis.width / 3.5) + ", " + (0 - 10) + ")");
 
-    vis.wrangleData('all', 'At_high_risk', 'Malaria_cases');
+    vis.wrangleData();
 
 }
 
-LinePlot.prototype.wrangleData = function(region_filter, risk_metric, case_metric){
+LinePlot.prototype.wrangleData = function(){
     var vis = this;
 
-    if (region_filter != 'all') {
-        vis.displayData = vis.data.filter(function(d) {
-            return d.WHO_region == region_filter;
-        });
-    } else {
-        vis.displayData = vis.data;
-    }
+    var metricType = $('#metric-type').find(':selected').val();
+    var metricTypeStd = metricType.replace('mean', 'std');
+    var procedureType = $('#procedure-type').find(':selected').val();
 
-    vis.displayData = vis.displayData.filter(function(d) {
-        return !(isNaN(d[risk_metric])) && !(isNaN(d.UN_population)) && !(isNaN(d[case_metric]));
+    vis.displayData = vis.data.filter(function(d) {
+       return d.procedure === procedureType;
     });
 
     vis.displayData.forEach(function(d) {
-        d['population_at_risk'] = d[risk_metric] / 100 * d.UN_population;
+        d.chosen_metric = d[metricType];
+        d.chosen_std = d[metricTypeStd];
     });
 
-    vis.displayData.sort(function(a, b) {
-       return b[case_metric] - a[case_metric];
-    });
+    console.log(vis.displayData);
 
+    //var yScaleValues = d3.extent(vis.displayData, function(d) { return d.chosen_metric; });
+    //var yScalar = 0.2;
+    //vis.yScale.domain([Math.max(yScaleValues[0] - yScalar, 0), yScaleValues[1] + yScalar]);
+    vis.yScale.domain([0, 1.5])
+
+    vis.displayData = d3.nest()
+            .key(function(d) {return d.group;})
+            .entries(vis.displayData);
+
+    console.log(vis.displayData);
     // Update the visualization
-    vis.updateVis(risk_metric, case_metric);
+    vis.updateVis();
 }
 
-function format_case_metric_text(value) {
-    if (value == 'Malaria_cases') {
-        return 'Diagnosed Cases';
-    } else if (value == 'Suspected_malaria_cases') {
-        return 'Suspected Cases';
-    } else {
-        return 'Population at Risk';
-    }
-}
-
-LinePlot.prototype.updateVis = function(risk_metric, case_metric) {
+LinePlot.prototype.updateVis = function() {
     var vis = this;
 
-    var xScaleDomain = d3.extent(vis.displayData, function(d) { return d.UN_population; });
-    vis.xScale.domain([xScaleDomain[0] - 50000, xScaleDomain[1] + 50000]);
-
-    var tickValues;
-    if (xScaleDomain[1] < 1000000000) {
-        tickValues = [250000,1000000, 10000000, 100000000];
-    } else {
-        tickValues = [250000,1000000, 10000000, 100000000,1000000000];
-    }
-
-    vis.radiusScale.domain(d3.extent(vis.displayData, function(d) { return d[case_metric]; }));
-
-    var risk_metric_text = risk_metric.replace('At_', '% at ').replace('_', ' ');
-    var case_metric_text = format_case_metric_text(case_metric);
-
-    vis.toolTip.html(function(d) {
-        return  '<div style="text-align: center";>'
-                + '<strong>' + d.Country + '</strong><br>'
-                + '<span style="color:' + vis.colorScale(d.WHO_region) + '";>' + d.WHO_region + '</span><br>'
-                + '</div>'
-                + '<span><strong>Population</strong>: ' + vis.numFormat(d.UN_population) + '</span><br>'
-                + '<span><strong>' + risk_metric_text + '</strong>: ' + d[risk_metric] + '%</span><br>'
-                + '<span><strong>' + case_metric_text + '</strong>: ' + vis.numFormat(d[case_metric]) + '</span>';
-    });
+    vis.toolTip.html(function(d) { return d3.format('.0%')(d.chosen_metric); });
 
     vis.svg.call(vis.toolTip);
 
-    var point = vis.svg.selectAll('.point')
-        .data(vis.displayData)
+    /*
+    var metricArea = vis.svg.selectAll('.metric-area')
+        .data(vis.displayData);
 
-    point.enter()
-        .append('circle')
-        .attr('class', 'point')
-        .on('mouseover', vis.toolTip.show)
-        .on('mouseout', vis.toolTip.hide)
-        .merge(point)
+    metricArea.enter()
+        .append('path')
+        .attr('class', 'metric-area')
+        .merge(metricArea)
         .transition()
         .duration(1000)
+        .attr('d', function(d) { return vis.area(d.values); })
+        .style('fill', function(d) {
+            return vis.colorScale(d.key);
+        });
+
+    metricArea.exit().remove();
+    */
+
+    var metricLine = vis.svg.selectAll('.metric-line')
+        .data(vis.displayData);
+
+    metricLine.enter()
+        .append('path')
+        .attr('class', 'metric-line')
+        .merge(metricLine)
+        .transition()
+        .duration(1000)
+        .attr('d', function(d) { return vis.line(d.values); })
+        .style("stroke", function(d) {
+            return vis.colorScale(d.key);
+        });
+
+    metricLine.exit().remove();
+
+    var circles_data = [];
+    vis.displayData.forEach(function(subelements) {
+        subelements.values.forEach(function(d) {
+            circles_data.push(d);
+        });
+    });
+
+    console.log(circles_data);
+
+    var metricPoint = vis.svg.selectAll('.metric-point')
+        .data(circles_data);
+
+    metricPoint.enter()
+        .append('circle')
+        .attr('class', 'metric-point')
+        .on('mouseover', vis.toolTip.show)
+        .on('mouseout', vis.toolTip.hide)
+        .merge(metricPoint)
+        .transition()
+        .duration(1000)
+        .attr('r', 3)
         .attr('cx', function(d) {
-            return vis.xScale(d.UN_population);
+            return vis.xScale(d.year);
         })
         .attr('cy', function(d) {
-            return vis.yScale(d[risk_metric]);
-        })
-        .attr('r', function(d) {
-            return vis.radiusScale(d[case_metric]);
+            console.log(d.year);
+            return vis.yScale(d.chosen_metric);
         })
         .attr('fill', function(d) {
-            return vis.colorScale(d.WHO_region);
+            return vis.colorScale(d.group);
+        });
+
+    metricPoint.exit().remove();
+
+    var label_data = [];
+    vis.displayData.forEach(function(d) {
+        if (d.key === 'Dr. Neel') {
+            label_data.push(d.values[d.values.length - 1]);
+        }
+    });
+
+    console.log('label data');
+    console.log(label_data);
+
+    var lineLabel = vis.svg.selectAll('.line-label')
+        .data(label_data);
+
+    lineLabel.enter()
+        .append('text')
+        .attr('class', 'line-label')
+        .merge(lineLabel)
+        .transition()
+        .duration(1000)
+        .attr('x', vis.width)
+        .attr('y', function(d) {
+            return vis.yScale(d.chosen_metric);
         })
-        .attr('stroke', 'black');
+        .attr('fill', function(d) { return vis.colorScale(d.group); })
+        .text(function(d) {return d.group; });
 
-    point.exit().remove();
-
-    vis.xAxis.tickValues(tickValues);
     vis.svg.select(".x-axis").transition().duration(200).call(vis.xAxis);
     vis.svg.select(".y-axis").transition().duration(200).call(vis.yAxis);
-    vis.svg.select(".y-axis").select('text').text(risk_metric_text);
 
-    vis.legendRegion.scale(vis.colorScale);
-    vis.svg.select(".legendSequential").call(vis.legendRegion);
+    vis.svg.select(".legendOrdinal").call(vis.legendOrdinal);
 
-    vis.legendSize.scale(vis.radiusScale).title(case_metric_text);
-    vis.svg.select(".legendSize").call(vis.legendSize);
-
-    update_case_count(vis.numFormat(d3.sum(vis.displayData, function(d) { return d[case_metric]})));
+    var chartTitle = $('#metric-type').find(':selected').text();
+    chartTitle = chartTitle.replace('Procedure ', '');
+    chartTitle = 'Additional ' + chartTitle + ' per Procedure';
+    vis.chartTitle.text(chartTitle);
 }

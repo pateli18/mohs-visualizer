@@ -1,0 +1,17 @@
+hcpcs_code,hcpcs_description,treatment_tag,cost_premium,Mohs,Repair,Adjacent Tissue Transfer,Graft,Layer Closure,All Repair,All
+17312,"Removal and microscopic examination of growth of the head, neck, hands, feet, or genitals",Mohs,0.71,True,False,False,False,False,False,True
+13132,"Repair of wound (2.6 to 7.5 centimeters) of forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet",Repair,0.51,False,True,False,False,False,True,True
+14060,"Tissue transfer repair of wound (10 sq centimeters or less) of eyelids, nose, ears, and/or lips",Adjacent Tissue Transfer,1.5,False,False,True,False,False,True,True
+15260,"Relocation of patient skin to nose, ears, eyelids, and/or lips (20 sq centimeters or less)",Graft,1.96,False,False,False,True,False,True,True
+14041,"Tissue transfer repair of wound (10.1 to 30.0 sq centimeters) of the forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet",Adjacent Tissue Transfer,1.81,False,False,True,False,False,True,True
+14061,"Tissue transfer repair of wound (10.1 to 30.0 sq centimeters) of eyelids, nose, ears, and/or lips",Adjacent Tissue Transfer,1.93,False,False,True,False,False,True,True
+12052,"Repair of wound (2.6 to 5.0 centimeters) of face, ears, eyelids, nose, lips, and/or mouth",Layer Closure,0.31,False,False,False,False,True,True,True
+13151,"Repair of wound (1.1 to 2.5 centimeters) of eyelids, nose, ears, and/or lips",Repair,0.45,False,True,False,False,False,True,True
+14040,"Tissue transfer repair of wound (10 sq centimeters or less) of the forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet",Adjacent Tissue Transfer,1.5,False,False,True,False,False,True,True
+12051,"Repair of wound (2.5 centimeters or less) of face, ears, eyelids, nose, lips, and/or mouth",Layer Closure,0.27,False,False,False,False,True,True,True
+13131,"Repair of wound (1.1 to 2.5 centimeters) of forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet",Repair,0.41,False,True,False,False,False,True,True
+12042,"Repair of wound (2.6 to 7.5 centimeters) of neck, hands, feet, and/or genitals",Layer Closure,0.32,False,False,False,False,True,True,True
+13133,"Repair of wound of forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet",Repair,0.34,False,True,False,False,False,True,True
+15240,"Relocation of patient skin to forehead, cheeks, chin, mouth, neck, underarms, genitals, hands, and/or feet (20 sq centimeters or less)",Graft,1.87,False,False,False,True,False,True,True
+12053,"Repair of wound (5.1 to 7.5 centimeters) of face, ears, eyelids, nose, lips, and/or mouth",Layer Closure,0.36,False,False,False,False,True,True,True
+12041,"Repair of wound (2.5 centimeters or less) of neck, hands, feet, and/or genitals",Layer Closure,0.24,False,False,False,False,True,True,True

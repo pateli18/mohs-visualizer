@@ -1,0 +1,72 @@
+.metric-line {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.metric-area {
+    fill: none;
+    opacity: .5;
+}
+
+.d3-tip {
+    line-height: 1;
+    padding: 12px;
+    background: black;
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: black;
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+
+#stacked-chart .y-axis path,
+#stacked-chart .y-axis line {
+    fill: none;
+    stroke: none
+}
+
+.axis-label, .thresholdLabel {
+    fill: grey;
+    font-size: 11px;
+    text-transform: capitalize;
+}
+
+.chart-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.subtitle {
+    font-size: 11px;
+}
+
+.table-wrapper {
+    font-size: 11px;
+    height: 300px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.form-control {
+    background-color: #228eae;
+    color: white;
+}
