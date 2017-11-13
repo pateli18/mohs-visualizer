@@ -11,7 +11,7 @@ LinePlot = function(_parentElement, _data) {
 LinePlot.prototype.initVis = function() {
     var vis = this;
 
-    vis.margin = { top: 50, right: 100, bottom: 100, left: 50 };
+    vis.margin = { top: 50, right: 100, bottom: 100, left: 80 };
 
     vis.width = $('#' + vis.parentElement).width() - vis.margin.left - vis.margin.right,
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -64,8 +64,10 @@ LinePlot.prototype.initVis = function() {
     vis.svg.append("g")
         .attr("class", "y-axis axis")
         .append('text')
-        .attr('transform', "translate(15,0) rotate(270)")
-        .attr('class', 'axis-label');
+        .attr('class', 'y-label')
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ (-50) +","+(vis.height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+        .text("(Additional Stages + Closure) / Initial Stage");
 
     vis.toolTip = d3.tip()
         .attr('class', 'd3-tip')

@@ -80,7 +80,7 @@ StackedPlot.prototype.updateVis = function() {
     var xScaleDomain =  Math.max(d3.max(vis.data, function(d) { return d[metricType];}), .20);
     vis.xScale.domain([-xScaleDomain, xScaleDomain]);
 
-    vis.toolTip.html(function(d) { return d3.format('.0%')(d.chosen_metric); });
+    vis.toolTip.html(function(d) { return d3.format('.0%')(d[metricType]); });
 
     vis.svg.call(vis.toolTip);
 

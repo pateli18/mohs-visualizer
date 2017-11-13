@@ -15,12 +15,36 @@
 		<h1>Mohs Analysis</h1>
 	</div>
 
-	<div class="col-md-7">
-		<div id="line-chart"></div>
-		<div id="stacked-chart"></div>
+	<div class="col-md-5">
+		<h4 class="chart-title">Methodology:</h4>
+		<div class="subtitle">
+			<p>Every Mohs procedure on the head, neck, hands, feet, and genitalia includes the initial stage.
+			However, the total cost of the procedure is more than just this stage, as it depends on the
+			number of additional stages as well as wound closure type.</p>
+			<p>To better understand and compare the true cost among providers, the additional procedure cost
+				and count displayed in the chart on the right are calculated by counting the total number of procedures in the
+				table below and dividing it by the number of initial Mohs procedures
+				(HCPCS Code - 17311).</p>
+
+			<p>Cost factors were calculated by taking the median of the relevant grouping in order
+				to remain robust to outliers.</p>
+		</div>
+		<div class="table-wrapper">
+			<table class="table table-striped header-fixed">
+				<thead>
+				<tr>
+					<th>Code</th>
+					<th>Description</th>
+				</tr>
+				</thead>
+				<tbody id="data-table-body">
+
+				</tbody>
+			</table>
+		</div>
 	</div>
 
-	<div class="col-md-5">
+	<div class="col-md-7">
 		<div class="col-md-6">
 			<h4 class="chart-title">Select Metric:</h4>
 			<select class="form-control" id="metric-type" onchange="updatePlots()">
@@ -41,27 +65,9 @@
 			</select>
 			<br>
 		</div>
-		<h4 class="chart-title">Methodology:</h4>
-		<div class="subtitle">
-			<p>Additional procedure cost and count are calculated by counting the total number of
-				procedures in the table above and dividing it by the number of initial Mohs procedures
-				(HCPCS Code - 17311).</p>
-			<p>Cost factors were calculated by taking the median of the relevant grouping in order
-				to remain robust to outliers.</p>
-		</div>
-		<div class="table-wrapper">
-			<table class="table table-striped header-fixed">
-				<thead>
-					<tr>
-						<th>Code</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody id="data-table-body">
 
-				</tbody>
-			</table>
-		</div>
+		<div id="line-chart"></div>
+		<div id="stacked-chart"></div>
 	</div>
 
 	<!-- Load JS libraries -->
