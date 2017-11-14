@@ -16,22 +16,26 @@ d3.csv("data/line_chart_data.csv", function(data) {
         d.count_mean = +d.count_mean;
         d.count_std = +d.count_std;
         d.premium_mean = +d.premium_mean;
-        d.std_premium = +d.std_premium;
+        d.premium_std = +d.premium_std;
         d.year = +d.year;
     });
 
     line_plot = new LinePlot('line-chart', data);
 
-});
-
-d3.csv('data/stacked_chart_data.csv', function(data) {
-
-    data.forEach(function(d) {
-        d.premium_mean_diff = +d.premium_mean_diff;
-        d.count_mean_diff = +d.count_mean_diff;
+    var drNeelComparisonSet = data.filter(function(d) {
+        return d.group === 'Dr. Neel';
     });
 
-    stacked_plot = new StackedPlot('stacked-chart', data)
+    var bostonMassSet = data.filter(function(d) {
+       return d.group != 'Dr. Neel';
+    });
+
+    var drNeelComparisons = {2012:{}, 2013:{}, 2014:{}, 2015:{}};
+    drNeelComparisonSet.forEach(function(d) {
+        drNeelComparisons[d.year][d.procedure] = {premium_mean:d.premium_mean, count_mean:d.count_mean};
+    });
+
+    stacked_plot = new StackedPlot('stacked-chart', bostonMassSet, drNeelComparisons);
 
 });
 

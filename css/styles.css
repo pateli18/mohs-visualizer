@@ -37,12 +37,6 @@
     left: 0;
 }
 
-#stacked-chart .y-axis path,
-#stacked-chart .y-axis line {
-    fill: none;
-    stroke: none
-}
-
 .axis-label, .thresholdLabel {
     fill: grey;
     font-size: 11px;
@@ -51,6 +45,12 @@
 
 .chart-title {
     font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.sub-chart-title {
+    font-size: 12px;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -74,4 +74,19 @@
 .y-label {
     fill: grey;
     font-size: 11px;
+}
+.zero-axis {
+    stroke: black;
+}
+
+.no-line path {
+    stroke:none;
+}
+
+.mgh-threshold {
+    stroke: black;
+}
+
+.mgh-threshold-label {
+    font-size: 12px;
 }

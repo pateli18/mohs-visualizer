@@ -14,7 +14,7 @@ LinePlot.prototype.initVis = function() {
     vis.margin = { top: 50, right: 100, bottom: 100, left: 80 };
 
     vis.width = $('#' + vis.parentElement).width() - vis.margin.left - vis.margin.right,
-    vis.height = 400 - vis.margin.top - vis.margin.bottom;
+    vis.height = 300 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select('#' + vis.parentElement)
         .append('svg')
@@ -107,8 +107,6 @@ LinePlot.prototype.wrangleData = function(){
         d.chosen_std = d[metricTypeStd];
     });
 
-    console.log(vis.displayData);
-
     //var yScaleValues = d3.extent(vis.displayData, function(d) { return d.chosen_metric; });
     //var yScalar = 0.2;
     //vis.yScale.domain([Math.max(yScaleValues[0] - yScalar, 0), yScaleValues[1] + yScalar]);
@@ -118,7 +116,6 @@ LinePlot.prototype.wrangleData = function(){
             .key(function(d) {return d.group;})
             .entries(vis.displayData);
 
-    console.log(vis.displayData);
     // Update the visualization
     vis.updateVis();
 }
@@ -171,8 +168,6 @@ LinePlot.prototype.updateVis = function() {
         });
     });
 
-    console.log(circles_data);
-
     var metricPoint = vis.svg.selectAll('.metric-point')
         .data(circles_data);
 
@@ -189,7 +184,6 @@ LinePlot.prototype.updateVis = function() {
             return vis.xScale(d.year);
         })
         .attr('cy', function(d) {
-            console.log(d.year);
             return vis.yScale(d.chosen_metric);
         })
         .attr('fill', function(d) {
@@ -204,9 +198,6 @@ LinePlot.prototype.updateVis = function() {
             label_data.push(d.values[d.values.length - 1]);
         }
     });
-
-    console.log('label data');
-    console.log(label_data);
 
     var lineLabel = vis.svg.selectAll('.line-label')
         .data(label_data);
