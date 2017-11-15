@@ -14,7 +14,7 @@ LinePlot.prototype.initVis = function() {
     vis.margin = { top: 50, right: 100, bottom: 100, left: 80 };
 
     vis.width = $('#' + vis.parentElement).width() - vis.margin.left - vis.margin.right,
-    vis.height = 300 - vis.margin.top - vis.margin.bottom;
+    vis.height = 350 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select('#' + vis.parentElement)
         .append('svg')
